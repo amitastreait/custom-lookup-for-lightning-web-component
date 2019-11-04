@@ -1,0 +1,90 @@
+<template>
+    <template if:true={errors}>
+        <c-error-panel friendly-message="Error" errors={errors}></c-error-panel>
+    </template>
+    <template if:false={selectedRecord} >
+        <div >
+            <c-search-component 
+                                onsearch={handleSearch}
+                                label={label}
+                                variant={variant}
+            >
+            </c-search-component>
+        </div>
+    </template>
+    <template if:false={selectedRecord} >
+        <template if:true={records}>
+            <ul style="min-height:40px;margin-top: -10px !important;" role="listbox"
+                class="slds-listbox slds-listbox_vertical slds-dropdown 
+                slds-dropdown_fluid" >
+                <template for:each={records} for:item="rec" >
+                    <c-record-list key={rec.Id} record={rec} iconname={iconname}
+                        onselect={handleSelect}></c-record-list>
+                </template>
+                <!-- This markup is for Create New Option-->
+                <div onclick={handleNewRecord} >
+                    <div class="createNew itemContainer slds-lookup__item-action--label 
+                        slds-text-link--reset slds-grid slds-grid--vertical-align-center 
+                        slds-truncate forceSearchInputLookupDesktopActionItem 
+                        lookup__footer" role="option" >
+                       <lightning-icon class="itemIcon slds-icon slds-icon--x-small 
+                            slds-m-left--x-small slds-icon-text-default slds-button__icon 
+                            slds-icon-utility-add slds-icon_container forceIcon"
+                            icon-name="utility:add" 
+                            data-aura-class="forceIcon"
+                            size="small"                        >
+                       </lightning-icon>
+                       <span  class="itemLabel slds-truncate slds-show--inline-block 
+                                    slds-m-left--xx-small" 
+                                    style="text-align: center;
+                                    padding-left: 20px;
+                                    padding-top: 9px;"
+                                    title={objectApiName} >New {objectApiName}
+                        </span>
+                    </div>
+                 </div>
+            </ul>
+        </template>
+    </template>
+    <template if:true={isNewRecord}>
+        <div>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                            Create New Record
+                        </h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="slds-p-around_small">
+                            <c-new-record oncancel={handleCancel} object-api-name={objectApiName} onsuccess={handleSuccess} ></c-new-record>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={handleOk}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+    
+    <div >
+        <template if:true={selectedRecord}>
+            <label class="slds-form-element__label" for="unique-id-of-input">
+                {label}
+            </label>
+            <div class="slds-pill-container">
+                    <lightning-pill class="pillSize" 
+                        href="JavaScript:void(0);"
+                        label={selectedRecord.Name} 
+                        name={selectedRecord.Name} 
+                        onclick={handleClick}
+                        onremove={handleRemove}>
+                            <lightning-icon icon-name={iconname} variant="circle"  
+                            alternative-text="account"></lightning-icon>        
+                    </lightning-pill>
+            </div>
+        </template>
+    </div>
+</template>
